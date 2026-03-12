@@ -1,12 +1,26 @@
 // x-agent: LLM Agent with X/Twitter read-only tools and Ink TUI
 // Everything in one file.
 
+import { Command } from "commander";
 import { Box, Text, render, useApp, useInput } from "ink";
 import Spinner from "ink-spinner";
 import TextInput from "ink-text-input";
 import OpenAI from "openai";
 import type { ChatCompletionMessageParam, ChatCompletionTool } from "openai/resources/index.js";
 import React, { useState, useCallback, useRef, type FC } from "react";
+
+// ─── CLI ─────────────────────────────────────────────────────────────────────
+
+const program = new Command();
+program
+	.name("x-agent")
+	.description("X/Twitter research agent with LLM-powered tools and TUI")
+	.version("0.1.0")
+	.option("-m, --model <model>", "LLM model name", process.env.OPENAI_MODEL ?? "gpt-4o")
+	.option("-b, --base-url <url>", "OpenAI-compatible API base URL", process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1")
+	.parse(process.argv);
+
+const cliOpts = program.opts<{ model: string; baseUrl: string }>();
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -21,8 +35,8 @@ function env(key: string, fallback?: string): string {
 
 const config = {
 	openaiApiKey: env("OPENAI_API_KEY"),
-	openaiBaseUrl: env("OPENAI_BASE_URL", "https://api.openai.com/v1"),
-	model: env("OPENAI_MODEL", "gpt-4o"),
+	openaiBaseUrl: cliOpts.baseUrl,
+	model: cliOpts.model,
 	xBearerToken: env("X_BEARER_TOKEN"),
 };
 
@@ -614,7 +628,8 @@ const isMain =
 	process.argv[1] &&
 	(process.argv[1].endsWith("main.tsx") ||
 		process.argv[1].endsWith("main.ts") ||
-		process.argv[1].includes("x-agent"));
+		process.argv[1].includes("x-agent") ||
+		process.argv[1].includes("bin/x-agent"));
 
 if (isMain) {
 	render(React.createElement(App));

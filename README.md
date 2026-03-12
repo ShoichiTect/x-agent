@@ -6,6 +6,15 @@ LLM agent with X/Twitter read-only tools, powered by OpenAI-compatible API and I
 
 ```bash
 npm install
+npm run build
+```
+
+## Install as CLI
+
+```bash
+npm run build
+npm link
+x-agent --help
 ```
 
 ## Environment Variables
@@ -23,7 +32,19 @@ Get your X Bearer Token from the [X Developer Portal](https://developer.x.com/).
 
 ```bash
 npm start
+# or as CLI
+x-agent
+x-agent --model claude-sonnet-4-6 --base-url http://localhost:8080/v1
 ```
+
+### CLI Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `-m, --model <model>` | LLM model name | `gpt-4o` / `$OPENAI_MODEL` |
+| `-b, --base-url <url>` | OpenAI-compatible API base URL | `https://api.openai.com/v1` / `$OPENAI_BASE_URL` |
+| `-V, --version` | Show version | |
+| `-h, --help` | Show help | |
 
 ## Available Tools
 
@@ -90,9 +111,10 @@ npm test
 
 Single file (`main.tsx`) containing:
 
-1. **Config** - env var loading (`OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL`, `X_BEARER_TOKEN`)
-2. **X API Client** - direct `fetch` with Bearer Token auth, rate limit tracking
-3. **Tool Definitions** - OpenAI function calling format
-4. **Tool Handlers** - X API call execution
-5. **Agent Loop** - OpenAI chat completions with tool calling loop + error recovery
-6. **Ink TUI** - React-based terminal UI with scroll, usage bar, spinner
+1. **CLI** - Commander.js for `--model`, `--base-url`, `--help`, `--version`
+2. **Config** - env var loading (`OPENAI_API_KEY`, `X_BEARER_TOKEN`) + CLI option overrides
+3. **X API Client** - direct `fetch` with Bearer Token auth, rate limit tracking
+4. **Tool Definitions** - OpenAI function calling format
+5. **Tool Handlers** - X API call execution
+6. **Agent Loop** - OpenAI chat completions with tool calling loop + error recovery
+7. **Ink TUI** - React-based terminal UI with scroll, usage bar, spinner
