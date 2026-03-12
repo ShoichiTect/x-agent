@@ -34,7 +34,7 @@ Get your X Bearer Token from the [X Developer Portal](https://developer.x.com/).
 npm start
 # or as CLI
 x-agent
-x-agent --model claude-sonnet-4-6 --base-url http://localhost:8080/v1
+x-agent --model gpt-4o-mini --base-url http://localhost:8080/v1
 ```
 
 ### CLI Options
